@@ -17,7 +17,23 @@ export async function GET() {
 
     if (instancesError) throw instancesError;
 
-    return NextResponse.json({ instances });
+    // Fetch visibility for each instance
+    const instancesWithVisibility = await Promise.all(
+      (instances || []).map(async (instance) => {
+        const { data: visibility } = await supabase
+          .from('survey_question_visibility')
+          .select('*')
+          .eq('config_id', instance.id)
+          .eq('config_type', 'instance');
+
+        return {
+          ...instance,
+          visibility: visibility || [],
+        };
+      })
+    );
+
+    return NextResponse.json({ instances: instancesWithVisibility });
   } catch (error) {
     console.error('Error fetching instances:', error);
     return NextResponse.json(

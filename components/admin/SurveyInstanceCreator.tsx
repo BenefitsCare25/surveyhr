@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { SurveyTemplate, Company, SurveyInstance, QuestionVisibility } from '@/types/survey';
+import QuestionToggleTree from './QuestionToggleTree';
 
 interface InstanceWithRelations extends SurveyInstance {
   companies?: Company;
@@ -23,6 +24,8 @@ export default function SurveyInstanceCreator() {
   const [generatedUrl, setGeneratedUrl] = useState<string | null>(null);
   const [showCompanyForm, setShowCompanyForm] = useState(false);
   const [newCompanyName, setNewCompanyName] = useState('');
+  const [editingInstance, setEditingInstance] = useState<InstanceWithRelations | null>(null);
+  const [editVisibility, setEditVisibility] = useState<QuestionVisibility[]>([]);
 
   useEffect(() => {
     fetchData();
@@ -117,6 +120,47 @@ export default function SurveyInstanceCreator() {
   const copyToClipboard = (url: string) => {
     navigator.clipboard.writeText(url);
     alert('Survey URL copied to clipboard!');
+  };
+
+  const startEditingInstance = (instance: InstanceWithRelations) => {
+    setEditingInstance(instance);
+    setEditVisibility(instance.visibility || []);
+  };
+
+  const cancelEditInstance = () => {
+    setEditingInstance(null);
+    setEditVisibility([]);
+  };
+
+  const handleSaveInstanceVisibility = async () => {
+    if (!editingInstance) return;
+
+    try {
+      setLoading(true);
+
+      // Delete existing visibility for this instance
+      await fetch(`/api/instances/${editingInstance.id}/visibility`, {
+        method: 'DELETE',
+      });
+
+      // Insert new visibility settings
+      const res = await fetch(`/api/instances/${editingInstance.id}/visibility`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ visibility: editVisibility }),
+      });
+
+      if (!res.ok) throw new Error('Failed to update visibility');
+
+      await fetchData();
+      cancelEditInstance();
+      alert('Survey questions updated successfully!');
+    } catch (error) {
+      console.error('Error updating instance visibility:', error);
+      alert('Failed to update survey questions');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -264,6 +308,56 @@ export default function SurveyInstanceCreator() {
         </div>
       )}
 
+      {/* Edit Instance Modal */}
+      {editingInstance && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-gray-900">
+                Edit Survey Questions: {editingInstance.name}
+              </h2>
+              <button
+                onClick={cancelEditInstance}
+                className="text-gray-400 hover:text-gray-600 text-2xl leading-none"
+                aria-label="Close"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="p-6">
+              <p className="text-gray-600 mb-4">
+                Customize which questions appear in this specific survey link
+              </p>
+
+              <QuestionToggleTree
+                visibility={editVisibility}
+                onChange={setEditVisibility}
+                configId={editingInstance.id}
+                configType="instance"
+              />
+            </div>
+
+            <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 px-6 py-4 flex gap-3">
+              <button
+                onClick={handleSaveInstanceVisibility}
+                disabled={loading}
+                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+              >
+                {loading ? 'Saving...' : 'Save Changes'}
+              </button>
+              <button
+                onClick={cancelEditInstance}
+                disabled={loading}
+                className="border px-6 py-2 rounded-lg hover:bg-gray-50 transition"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Instances List */}
       <div className="space-y-3">
         <h3 className="font-semibold text-lg text-gray-900">Generated Survey Links</h3>
@@ -299,12 +393,20 @@ export default function SurveyInstanceCreator() {
                     </p>
                   )}
                 </div>
-                <button
-                  onClick={() => toggleInstanceActive(instance.id, instance.is_active)}
-                  className={`text-sm px-3 py-1 rounded transition ${instance.is_active ? 'text-red-600 hover:bg-red-50' : 'text-green-600 hover:bg-green-50'}`}
-                >
-                  {instance.is_active ? 'Deactivate' : 'Activate'}
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => startEditingInstance(instance)}
+                    className="text-sm px-3 py-1 rounded transition text-blue-600 hover:bg-blue-50"
+                  >
+                    Edit Questions
+                  </button>
+                  <button
+                    onClick={() => toggleInstanceActive(instance.id, instance.is_active)}
+                    className={`text-sm px-3 py-1 rounded transition ${instance.is_active ? 'text-red-600 hover:bg-red-50' : 'text-green-600 hover:bg-green-50'}`}
+                  >
+                    {instance.is_active ? 'Deactivate' : 'Activate'}
+                  </button>
+                </div>
               </div>
 
               <div className="flex gap-2 items-center bg-gray-50 p-2 rounded mt-3">
