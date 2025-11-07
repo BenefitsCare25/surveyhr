@@ -1,21 +1,56 @@
 import { notFound } from 'next/navigation';
 import SurveyForm from '@/components/SurveyForm';
 import { SurveyConfiguration } from '@/types/survey';
+import { supabase } from '@/lib/supabase';
 
 async function getSurveyConfig(slug: string): Promise<SurveyConfiguration | null> {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/instances/${slug}`, {
-      cache: 'no-store',
-    });
+    // Fetch instance by slug directly from Supabase
+    const { data: instance, error: instanceError } = await supabase
+      .from('survey_instances')
+      .select(`
+        *,
+        companies (id, name, contact_email),
+        survey_templates (id, name, description)
+      `)
+      .eq('url_slug', slug)
+      .single();
 
-    if (!res.ok) return null;
+    if (instanceError || !instance) {
+      console.error('Error fetching instance:', instanceError);
+      return null;
+    }
 
-    const data = await res.json();
+    // Check if instance is active
+    if (!instance.is_active) {
+      return null;
+    }
+
+    // Check if expired
+    if (instance.expires_at) {
+      const expiryDate = new Date(instance.expires_at);
+      if (expiryDate < new Date()) {
+        return null;
+      }
+    }
+
+    // Fetch visibility configuration
+    const { data: visibility, error: visibilityError } = await supabase
+      .from('survey_question_visibility')
+      .select('*')
+      .eq('config_id', instance.id)
+      .eq('config_type', 'instance');
+
+    if (visibilityError) {
+      console.error('Error fetching visibility:', visibilityError);
+      return null;
+    }
+
     return {
-      instance: data.instance,
-      company: data.instance?.companies,
-      template: data.instance?.survey_templates,
-      visibility: data.visibility || [],
+      instance,
+      company: instance.companies,
+      template: instance.survey_templates,
+      visibility: visibility || [],
     };
   } catch (error) {
     console.error('Error fetching survey config:', error);

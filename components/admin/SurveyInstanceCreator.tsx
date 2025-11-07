@@ -123,7 +123,7 @@ export default function SurveyInstanceCreator() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold">Survey Links</h2>
+          <h2 className="text-2xl font-bold text-gray-900">Survey Links</h2>
           <p className="text-gray-600 text-sm mt-1">
             Generate unique survey links from templates
           </p>
@@ -139,16 +139,16 @@ export default function SurveyInstanceCreator() {
       {/* Create Instance Form */}
       {showForm && (
         <form onSubmit={handleCreateInstance} className="bg-white border rounded-lg p-6 space-y-4">
-          <h3 className="text-lg font-semibold">Generate New Survey Link</h3>
+          <h3 className="text-lg font-semibold text-gray-900">Generate New Survey Link</h3>
 
           <div>
-            <label className="block text-sm font-medium mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Template <span className="text-red-500">*</span>
             </label>
             <select
               value={formData.template_id}
               onChange={(e) => setFormData({ ...formData, template_id: e.target.value })}
-              className="w-full border rounded-lg p-2"
+              className="w-full border border-gray-300 rounded-lg p-2 text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
             >
               <option value="">Select a template...</option>
@@ -166,7 +166,7 @@ export default function SurveyInstanceCreator() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Company (Optional)
             </label>
             {!showCompanyForm ? (
@@ -174,7 +174,7 @@ export default function SurveyInstanceCreator() {
                 <select
                   value={formData.company_id}
                   onChange={(e) => setFormData({ ...formData, company_id: e.target.value })}
-                  className="flex-1 border rounded-lg p-2"
+                  className="flex-1 border border-gray-300 rounded-lg p-2 text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="">No company (generic link)</option>
                   {companies.map((company) => (
@@ -198,7 +198,7 @@ export default function SurveyInstanceCreator() {
                   value={newCompanyName}
                   onChange={(e) => setNewCompanyName(e.target.value)}
                   placeholder="Company name"
-                  className="flex-1 border rounded-lg p-2"
+                  className="flex-1 border border-gray-300 rounded-lg p-2 text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
                 />
                 <button
@@ -220,14 +220,14 @@ export default function SurveyInstanceCreator() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Survey Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full border rounded-lg p-2"
+              className="w-full border border-gray-300 rounded-lg p-2 text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="e.g., Q1 2024 Survey - Company ABC"
               required
             />
@@ -266,7 +266,7 @@ export default function SurveyInstanceCreator() {
 
       {/* Instances List */}
       <div className="space-y-3">
-        <h3 className="font-semibold text-lg">Generated Survey Links</h3>
+        <h3 className="font-semibold text-lg text-gray-900">Generated Survey Links</h3>
 
         {instances.length === 0 ? (
           <div className="text-center py-12 text-gray-500">
@@ -281,7 +281,7 @@ export default function SurveyInstanceCreator() {
               <div className="flex justify-between items-start mb-2">
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <h4 className="font-semibold">{instance.name}</h4>
+                    <h4 className="font-semibold text-gray-900">{instance.name}</h4>
                     <span
                       className={`text-xs px-2 py-1 rounded ${instance.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}
                     >
@@ -308,7 +308,7 @@ export default function SurveyInstanceCreator() {
               </div>
 
               <div className="flex gap-2 items-center bg-gray-50 p-2 rounded mt-3">
-                <span className="text-xs text-gray-500 font-mono flex-1 truncate">
+                <span className="text-xs text-gray-700 font-mono flex-1 truncate">
                   {typeof window !== 'undefined' && `${window.location.origin}/survey/${instance.url_slug}`}
                 </span>
                 <button

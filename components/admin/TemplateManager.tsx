@@ -127,7 +127,7 @@ export default function TemplateManager() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold">Survey Templates</h2>
+          <h2 className="text-2xl font-bold text-gray-900">Survey Templates</h2>
           <p className="text-gray-600 text-sm mt-1">
             Create reusable templates to quickly generate custom surveys
           </p>
@@ -146,40 +146,40 @@ export default function TemplateManager() {
       {(isCreating || editingTemplate) && (
         <form onSubmit={handleSubmit} className="bg-white border rounded-lg p-6 space-y-6">
           <div>
-            <h3 className="text-lg font-semibold mb-4">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
               {editingTemplate ? 'Edit Template' : 'Create New Template'}
             </h3>
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Template Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full border rounded-lg p-2"
+              className="w-full border border-gray-300 rounded-lg p-2 text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="e.g., Q1 2024 Survey Template"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Description
             </label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full border rounded-lg p-2"
+              className="w-full border border-gray-300 rounded-lg p-2 text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               rows={3}
               placeholder="Optional description..."
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-3">
+            <label className="block text-sm font-medium text-gray-700 mb-3">
               Question Configuration
             </label>
             <QuestionToggleTree
@@ -228,7 +228,7 @@ export default function TemplateManager() {
             >
               <div className="flex justify-between items-start">
                 <div className="flex-1">
-                  <h3 className="font-semibold text-lg">{template.name}</h3>
+                  <h3 className="font-semibold text-lg text-gray-900">{template.name}</h3>
                   {template.description && (
                     <p className="text-sm text-gray-600 mt-1">{template.description}</p>
                   )}
