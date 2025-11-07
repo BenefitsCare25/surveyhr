@@ -6,6 +6,7 @@ import PasswordGate from '@/components/PasswordGate';
 import FilterPanel from '@/components/FilterPanel';
 import ExportButton from '@/components/ExportButton';
 import ResponseDetailsModal from '@/components/ResponseDetailsModal';
+import ConfigurationTab from '@/components/admin/ConfigurationTab';
 
 interface SurveyResponse {
   id: string;
@@ -22,8 +23,10 @@ interface SurveyResponse {
 
 type SortField = 'company_name' | 'respondent_name' | 'percentage_score' | 'submitted_at';
 type SortDirection = 'asc' | 'desc';
+type Tab = 'responses' | 'configuration';
 
 export default function DashboardPage() {
+  const [activeTab, setActiveTab] = useState<Tab>('responses');
   const [responses, setResponses] = useState<SurveyResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -227,27 +230,63 @@ export default function DashboardPage() {
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Survey Responses Dashboard</h1>
+                <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
                 <p className="text-gray-600 mt-1">
-                  Showing {stats.filtered} of {stats.total} responses
+                  Manage surveys, responses, and configurations
                 </p>
               </div>
               <div className="flex gap-2">
-                <ExportButton responses={filteredAndSortedResponses} />
-                <a
-                  href="/survey"
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
-                >
-                  Submit Survey →
-                </a>
+                {activeTab === 'responses' && (
+                  <>
+                    <ExportButton responses={filteredAndSortedResponses} />
+                    <a
+                      href="/survey"
+                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
+                    >
+                      Submit Survey →
+                    </a>
+                  </>
+                )}
               </div>
+            </div>
+
+            {/* Tabs */}
+            <div className="border-b border-gray-200 mt-6">
+              <nav className="flex gap-8">
+                <button
+                  onClick={() => setActiveTab('responses')}
+                  className={`pb-4 px-1 border-b-2 font-medium transition ${
+                    activeTab === 'responses'
+                      ? 'border-blue-600 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  Responses
+                  <span className="ml-2 bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">
+                    {stats.total}
+                  </span>
+                </button>
+                <button
+                  onClick={() => setActiveTab('configuration')}
+                  className={`pb-4 px-1 border-b-2 font-medium transition ${
+                    activeTab === 'configuration'
+                      ? 'border-blue-600 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  Configuration
+                </button>
+              </nav>
             </div>
           </div>
 
-          {/* Statistics */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          {/* Tab Content */}
+          {activeTab === 'responses' ? (
+            <>
+              {/* Statistics */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div className="bg-white shadow-md rounded-lg p-4">
               <p className="text-sm text-gray-600 mb-1">Average Score</p>
               <p className="text-3xl font-bold text-blue-600">{stats.avgScore}%</p>
@@ -390,11 +429,16 @@ export default function DashboardPage() {
               </div>
             )}
           </div>
+
+          {/* Response Details Modal */}
+          <ResponseDetailsModal response={selectedResponse} onClose={() => setSelectedResponse(null)} />
+            </>
+          ) : (
+            /* Configuration Tab */
+            <ConfigurationTab />
+          )}
         </div>
       </div>
-
-      {/* Response Details Modal */}
-      <ResponseDetailsModal response={selectedResponse} onClose={() => setSelectedResponse(null)} />
     </PasswordGate>
   );
 }

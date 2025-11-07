@@ -1,12 +1,16 @@
 'use client';
 
-import { useState } from 'react';
-import { SURVEY_CATEGORIES, SurveyResponse } from '@/types/survey';
+import { useState, useMemo } from 'react';
+import { SURVEY_CATEGORIES, SurveyResponse, SurveyConfiguration, Category } from '@/types/survey';
 import CategorySection from './CategorySection';
 import { supabase } from '@/lib/supabase';
 
-export default function SurveyForm() {
-  const [companyName, setCompanyName] = useState('');
+interface SurveyFormProps {
+  configuration?: SurveyConfiguration;
+}
+
+export default function SurveyForm({ configuration }: SurveyFormProps) {
+  const [companyName, setCompanyName] = useState(configuration?.company?.name || '');
   const [respondentName, setRespondentName] = useState('');
   const [respondentEmail, setRespondentEmail] = useState('');
 
@@ -19,6 +23,45 @@ export default function SurveyForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+
+  // Filter categories and questions based on configuration
+  const filteredCategories = useMemo(() => {
+    if (!configuration || !configuration.visibility || configuration.visibility.length === 0) {
+      return SURVEY_CATEGORIES;
+    }
+
+    const visibility = configuration.visibility;
+
+    return SURVEY_CATEGORIES.map((category): Category | null => {
+      // Check if category is visible
+      const categoryVis = visibility.find(
+        v => v.category_id === category.id && v.question_id === null
+      );
+      const isCategoryVisible = categoryVis?.is_visible ?? true;
+
+      if (!isCategoryVisible) {
+        return null;
+      }
+
+      // Filter questions within category
+      const filteredQuestions = category.questions.filter(question => {
+        const questionVis = visibility.find(
+          v => v.category_id === category.id && v.question_id === question.id
+        );
+        return questionVis?.is_visible ?? true;
+      });
+
+      // If no questions are visible, hide the category
+      if (filteredQuestions.length === 0) {
+        return null;
+      }
+
+      return {
+        ...category,
+        questions: filteredQuestions,
+      };
+    }).filter((cat): cat is Category => cat !== null);
+  }, [configuration]);
 
   const handleScoreChange = (categoryId: string, questionId: string, score: number) => {
     setScores((prev) => ({
@@ -41,14 +84,14 @@ export default function SurveyForm() {
     let total = 0;
     let maxPossible = 0;
 
-    SURVEY_CATEGORIES.forEach((category) => {
+    filteredCategories.forEach((category) => {
       const categoryScores = scores[category.id] || {};
       // Use the overall satisfaction score for each category
       total += categoryScores[category.overallQuestion.id] || 0;
       maxPossible += category.overallQuestion.maxScore;
     });
 
-    return { total, maxPossible, percentage: (total / maxPossible) * 100 };
+    return { total, maxPossible, percentage: maxPossible > 0 ? (total / maxPossible) * 100 : 0 };
   };
 
   const validateForm = () => {
@@ -58,7 +101,7 @@ export default function SurveyForm() {
     }
 
     // Check if all questions are answered
-    for (const category of SURVEY_CATEGORIES) {
+    for (const category of filteredCategories) {
       const categoryScores = scores[category.id] || {};
       for (const question of category.questions) {
         if (!categoryScores[question.id] || categoryScores[question.id] === 0) {
@@ -90,6 +133,7 @@ export default function SurveyForm() {
         companyName,
         respondentName,
         respondentEmail,
+        instanceId: configuration?.instance?.id,
         scores,
         comments,
         totalScore: total,
@@ -102,6 +146,7 @@ export default function SurveyForm() {
           company_name: response.companyName,
           respondent_name: response.respondentName,
           respondent_email: response.respondentEmail,
+          instance_id: response.instanceId || null,
           scores: response.scores,
           comments: response.comments,
           total_score: response.totalScore,
@@ -161,7 +206,7 @@ export default function SurveyForm() {
               type="text"
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
               placeholder="Enter company name"
               required
             />
@@ -175,7 +220,7 @@ export default function SurveyForm() {
               type="text"
               value={respondentName}
               onChange={(e) => setRespondentName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
               placeholder="Enter your name"
             />
           </div>
@@ -188,7 +233,7 @@ export default function SurveyForm() {
               type="email"
               value={respondentEmail}
               onChange={(e) => setRespondentEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
               placeholder="your.email@company.com"
             />
           </div>
@@ -196,7 +241,7 @@ export default function SurveyForm() {
       </div>
 
       {/* Survey Categories */}
-      {SURVEY_CATEGORIES.map((category) => (
+      {filteredCategories.map((category) => (
         <CategorySection
           key={category.id}
           category={category}

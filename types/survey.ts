@@ -19,6 +19,7 @@ export interface SurveyResponse {
   respondentName: string;
   respondentEmail: string;
   submittedAt: Date;
+  instanceId?: string; // Optional survey instance ID
 
   // Scores: category_id -> question_id -> rating (1-5)
   scores: Record<string, Record<string, number>>;
@@ -30,6 +31,57 @@ export interface SurveyResponse {
   totalScore: number;
   maxPossibleScore: number;
   percentageScore: number;
+}
+
+// Configuration types
+export interface Company {
+  id: string;
+  name: string;
+  contact_email?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SurveyTemplate {
+  id: string;
+  name: string;
+  description?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SurveyInstance {
+  id: string;
+  template_id?: string;
+  company_id?: string;
+  url_slug: string;
+  name: string;
+  is_active: boolean;
+  created_at: string;
+  expires_at?: string;
+}
+
+export interface QuestionVisibility {
+  id: string;
+  config_id: string;
+  config_type: 'template' | 'instance';
+  category_id: string;
+  question_id?: string; // null means category-level control
+  is_visible: boolean;
+  created_at: string;
+}
+
+export interface SurveyConfiguration {
+  instance?: SurveyInstance;
+  template?: SurveyTemplate;
+  company?: Company;
+  visibility: QuestionVisibility[];
+}
+
+// Helper type for filtered categories
+export interface FilteredCategory extends Category {
+  questions: CategoryQuestion[];
+  isVisible: boolean;
 }
 
 // Survey structure from PDF
@@ -95,15 +147,15 @@ export const SURVEY_CATEGORIES: Category[] = [
     questions: [
       {
         id: 'pre_renewal',
-        question: 'Pre Renewal Meeting (August - September): Plan the renewal strategies, propose enhancements, claims review, provide non-binding renewal terms',
-        maxScore: 30,
+        question: 'Pre Renewal Meeting: Plan the renewal strategies, propose enhancements, claims review, provide non-binding renewal terms',
+        maxScore: 15,
       },
       {
         id: 'remarketing',
-        question: 'Remarketing Exercise (September to October): Obtain quotes from other insurers to benchmark against renewal terms, Present and recommend renewal proposal',
-        maxScore: 30,
+        question: 'Remarketing Exercise: Obtain quotes from other insurers to benchmark against renewal terms, Present and recommend renewal proposal',
+        maxScore: 15,
       },
     ],
-    overallQuestion: { id: 'overall', question: 'Overall satisfaction of Renewal Review', maxScore: 60 },
+    overallQuestion: { id: 'overall', question: 'Overall satisfaction of Renewal Review', maxScore: 30 },
   },
 ];
