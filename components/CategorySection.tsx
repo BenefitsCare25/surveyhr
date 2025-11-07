@@ -84,7 +84,7 @@ export default function CategorySection({
           value={comment}
           onChange={(e) => onCommentChange(e.target.value)}
           rows={3}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
           placeholder="Add any additional comments for this category..."
         />
       </div>

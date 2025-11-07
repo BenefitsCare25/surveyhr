@@ -184,10 +184,10 @@ export default function SurveyForm({ configuration }: SurveyFormProps) {
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg rounded-lg p-6 mb-8">
         <h1 className="text-3xl font-bold mb-2">
-          Broker&apos;s Service Level Assessment
+          Inspro Satisfaction Survey
         </h1>
         <p className="text-blue-100">
-          Quarterly evaluation form for rating broker service performance
+          Survey form for rating broker service performance
         </p>
       </div>
 
