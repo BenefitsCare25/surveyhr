@@ -136,6 +136,7 @@ export default function QuestionToggleTree({
               <div className="flex items-center gap-3 flex-1">
                 <button
                   onClick={() => toggleExpanded(category.id)}
+                  type="button"
                   className="text-gray-500 hover:text-gray-700 p-1"
                   aria-label={isExpanded ? 'Collapse' : 'Expand'}
                 >
@@ -151,6 +152,7 @@ export default function QuestionToggleTree({
 
                 <button
                   onClick={() => toggleCategory(category.id)}
+                  type="button"
                   className={`flex items-center gap-2 flex-1 text-left transition-opacity ${!catVisible ? 'opacity-50' : ''}`}
                 >
                   <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${catVisible ? 'bg-blue-600 border-blue-600' : 'border-gray-300'}`}>
@@ -161,7 +163,7 @@ export default function QuestionToggleTree({
                     )}
                   </div>
                   <div>
-                    <div className="font-medium">{category.name}</div>
+                    <div className="font-medium text-gray-900">{category.name}</div>
                     <div className="text-xs text-gray-500">{category.weight}% of total score</div>
                   </div>
                 </button>
@@ -178,6 +180,7 @@ export default function QuestionToggleTree({
                     <button
                       key={question.id}
                       onClick={() => toggleQuestion(category.id, question.id)}
+                      type="button"
                       disabled={!catVisible}
                       className={`w-full p-3 pl-12 flex items-start gap-3 hover:bg-gray-50 border-t text-left transition-opacity ${!catVisible || !qVisible ? 'opacity-50' : ''}`}
                     >
