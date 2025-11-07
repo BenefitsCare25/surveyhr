@@ -37,7 +37,7 @@ export default function TemplateManager() {
         config_id: '',
         config_type: 'template',
         category_id: cat.id,
-        question_id: null,
+        question_id: undefined,
         is_visible: true,
         created_at: new Date().toISOString(),
       }))

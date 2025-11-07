@@ -66,7 +66,7 @@ export interface QuestionVisibility {
   config_id: string;
   config_type: 'template' | 'instance';
   category_id: string;
-  question_id?: string; // null means category-level control
+  question_id?: string | null; // null/undefined means category-level control
   is_visible: boolean;
   created_at: string;
 }

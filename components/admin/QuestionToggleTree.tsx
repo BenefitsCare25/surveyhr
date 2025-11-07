@@ -52,7 +52,7 @@ export default function QuestionToggleTree({
       config_id: configId,
       config_type: configType,
       category_id: categoryId,
-      question_id: null,
+      question_id: undefined,
       is_visible: !currentlyVisible,
       created_at: new Date().toISOString(),
     });
