@@ -88,7 +88,9 @@ export default function SurveyForm({ configuration }: SurveyFormProps) {
       const categoryScores = scores[category.id] || {};
       // Use the overall satisfaction score for each category
       total += categoryScores[category.overallQuestion.id] || 0;
-      maxPossible += category.overallQuestion.maxScore;
+      // Calculate max score dynamically based on visible questions
+      const categoryMax = category.questions.reduce((sum, q) => sum + q.maxScore, 0);
+      maxPossible += categoryMax;
     });
 
     return { total, maxPossible, percentage: maxPossible > 0 ? (total / maxPossible) * 100 : 0 };

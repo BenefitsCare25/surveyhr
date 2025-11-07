@@ -24,12 +24,15 @@ export default function CategorySection({
     return sum + (scores[q.id] || 0);
   }, 0);
 
+  // Calculate dynamic max score based on visible questions
+  const maxTotal = category.questions.reduce((sum, q) => {
+    return sum + q.maxScore;
+  }, 0);
+
   // Auto-update the overall score whenever individual scores change
   useEffect(() => {
     onScoreChange(category.overallQuestion.id, calculatedOverallScore);
   }, [calculatedOverallScore, category.overallQuestion.id, onScoreChange]);
-
-  const maxTotal = category.overallQuestion.maxScore;
 
   return (
     <div className="bg-white shadow-md rounded-lg p-6 mb-6">
@@ -70,7 +73,7 @@ export default function CategorySection({
               {calculatedOverallScore}
             </div>
             <div className="text-sm text-gray-600">
-              Maximum Score: {category.overallQuestion.maxScore}
+              Maximum Score: {maxTotal}
             </div>
           </div>
         </div>
