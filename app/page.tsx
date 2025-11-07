@@ -12,8 +12,6 @@ interface SurveyResponse {
   company_name: string;
   respondent_name: string;
   respondent_email: string;
-  quarter?: string;
-  policy_year?: string;
   submitted_at: string;
   scores: Record<string, Record<string, number>>;
   comments: Record<string, string>;
@@ -34,8 +32,6 @@ export default function DashboardPage() {
   // Filter states
   const [companyFilter, setCompanyFilter] = useState('');
   const [emailFilter, setEmailFilter] = useState('');
-  const [quarterFilter, setQuarterFilter] = useState('');
-  const [policyYearFilter, setPolicyYearFilter] = useState('');
   const [dateFromFilter, setDateFromFilter] = useState('');
   const [dateToFilter, setDateToFilter] = useState('');
 
@@ -73,8 +69,6 @@ export default function DashboardPage() {
   const handleClearFilters = () => {
     setCompanyFilter('');
     setEmailFilter('');
-    setQuarterFilter('');
-    setPolicyYearFilter('');
     setDateFromFilter('');
     setDateToFilter('');
     setCurrentPage(1);
@@ -108,16 +102,6 @@ export default function DashboardPage() {
         emailFilter &&
         !response.respondent_email.toLowerCase().includes(emailFilter.toLowerCase())
       ) {
-        return false;
-      }
-
-      // Quarter filter
-      if (quarterFilter && response.quarter !== quarterFilter) {
-        return false;
-      }
-
-      // Policy year filter
-      if (policyYearFilter && response.policy_year !== policyYearFilter) {
         return false;
       }
 
@@ -166,8 +150,6 @@ export default function DashboardPage() {
     responses,
     companyFilter,
     emailFilter,
-    quarterFilter,
-    policyYearFilter,
     dateFromFilter,
     dateToFilter,
     sortField,
@@ -286,10 +268,6 @@ export default function DashboardPage() {
             setCompanyFilter={setCompanyFilter}
             emailFilter={emailFilter}
             setEmailFilter={setEmailFilter}
-            quarterFilter={quarterFilter}
-            setQuarterFilter={setQuarterFilter}
-            policyYearFilter={policyYearFilter}
-            setPolicyYearFilter={setPolicyYearFilter}
             dateFromFilter={dateFromFilter}
             setDateFromFilter={setDateFromFilter}
             dateToFilter={dateToFilter}
@@ -316,9 +294,6 @@ export default function DashboardPage() {
                     >
                       Respondent <SortIcon field="respondent_name" />
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Quarter / Year
-                    </th>
                     <th
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                       onClick={() => handleSort('percentage_score')}
@@ -339,7 +314,7 @@ export default function DashboardPage() {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {paginatedResponses.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                      <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
                         {filteredAndSortedResponses.length === 0 && responses.length > 0
                           ? 'No responses match your filters'
                           : 'No responses found'}
@@ -360,9 +335,6 @@ export default function DashboardPage() {
                         <td className="px-6 py-4">
                           <div className="text-sm text-gray-900">{response.respondent_name}</div>
                           <div className="text-sm text-gray-500">{response.respondent_email}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {response.quarter || '-'} {response.policy_year && `/ ${response.policy_year}`}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm font-semibold text-gray-900">

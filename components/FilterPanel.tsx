@@ -5,10 +5,6 @@ interface FilterPanelProps {
   setCompanyFilter: (value: string) => void;
   emailFilter: string;
   setEmailFilter: (value: string) => void;
-  quarterFilter: string;
-  setQuarterFilter: (value: string) => void;
-  policyYearFilter: string;
-  setPolicyYearFilter: (value: string) => void;
   dateFromFilter: string;
   setDateFromFilter: (value: string) => void;
   dateToFilter: string;
@@ -22,10 +18,6 @@ export default function FilterPanel({
   setCompanyFilter,
   emailFilter,
   setEmailFilter,
-  quarterFilter,
-  setQuarterFilter,
-  policyYearFilter,
-  setPolicyYearFilter,
   dateFromFilter,
   setDateFromFilter,
   dateToFilter,
@@ -36,8 +28,6 @@ export default function FilterPanel({
   const hasActiveFilters =
     companyFilter ||
     emailFilter ||
-    quarterFilter ||
-    policyYearFilter ||
     dateFromFilter ||
     dateToFilter;
 
@@ -87,40 +77,6 @@ export default function FilterPanel({
             value={emailFilter}
             onChange={(e) => setEmailFilter(e.target.value)}
             placeholder="Search by email..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-        </div>
-
-        {/* Quarter Filter */}
-        <div>
-          <label htmlFor="quarter" className="block text-sm font-medium text-gray-700 mb-1">
-            Quarter
-          </label>
-          <select
-            id="quarter"
-            value={quarterFilter}
-            onChange={(e) => setQuarterFilter(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="">All quarters</option>
-            <option value="Q1">Q1</option>
-            <option value="Q2">Q2</option>
-            <option value="Q3">Q3</option>
-            <option value="Q4">Q4</option>
-          </select>
-        </div>
-
-        {/* Policy Year Filter */}
-        <div>
-          <label htmlFor="policyYear" className="block text-sm font-medium text-gray-700 mb-1">
-            Policy Year
-          </label>
-          <input
-            type="text"
-            id="policyYear"
-            value={policyYearFilter}
-            onChange={(e) => setPolicyYearFilter(e.target.value)}
-            placeholder="e.g., 2024"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>

@@ -5,8 +5,6 @@ interface SurveyResponse {
   company_name: string;
   respondent_name: string;
   respondent_email: string;
-  quarter?: string;
-  policy_year?: string;
   submitted_at: string;
   scores: Record<string, Record<string, number>>;
   comments: Record<string, string>;
@@ -22,8 +20,6 @@ export function exportToCSV(responses: SurveyResponse[], filename = 'survey-resp
     'Company Name',
     'Respondent Name',
     'Respondent Email',
-    'Quarter',
-    'Policy Year',
     'Submitted At',
     'Total Score',
     'Max Possible Score',
@@ -52,8 +48,6 @@ export function exportToCSV(responses: SurveyResponse[], filename = 'survey-resp
       response.company_name || '',
       response.respondent_name || '',
       response.respondent_email || '',
-      response.quarter || '',
-      response.policy_year || '',
       new Date(response.submitted_at).toLocaleString(),
       response.total_score?.toString() || '0',
       response.max_possible_score?.toString() || '0',

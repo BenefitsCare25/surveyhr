@@ -7,8 +7,6 @@ interface SurveyResponse {
   company_name: string;
   respondent_name: string;
   respondent_email: string;
-  quarter?: string;
-  policy_year?: string;
   submitted_at: string;
   scores: Record<string, Record<string, number>>;
   comments: Record<string, string>;
@@ -79,18 +77,6 @@ export default function ResponseDetailsModal({ response, onClose }: ResponseDeta
                 <span className="font-medium text-gray-700">Submitted:</span>
                 <span className="ml-2 text-gray-900">{formatDate(response.submitted_at)}</span>
               </div>
-              {response.quarter && (
-                <div>
-                  <span className="font-medium text-gray-700">Quarter:</span>
-                  <span className="ml-2 text-gray-900">{response.quarter}</span>
-                </div>
-              )}
-              {response.policy_year && (
-                <div>
-                  <span className="font-medium text-gray-700">Policy Year:</span>
-                  <span className="ml-2 text-gray-900">{response.policy_year}</span>
-                </div>
-              )}
             </div>
           </div>
 
@@ -127,7 +113,7 @@ export default function ResponseDetailsModal({ response, onClose }: ResponseDeta
               const categoryScores = response.scores?.[category.id] || {};
               const categoryComment = response.comments?.[category.id] || '';
               const categoryTotal = categoryScores.overall || 0;
-              const maxCategoryScore = category.questions.find((q) => q.id === 'overall')?.maxScore || 0;
+              const maxCategoryScore = category.overallQuestion.maxScore;
               const categoryPercentage = maxCategoryScore > 0 ? (categoryTotal / maxCategoryScore) * 100 : 0;
 
               return (
@@ -158,6 +144,14 @@ export default function ResponseDetailsModal({ response, onClose }: ResponseDeta
                         </div>
                       );
                     })}
+
+                    {/* Overall Satisfaction Score */}
+                    <div className="flex justify-between items-start text-sm pt-2 mt-2 border-t border-gray-300 bg-blue-50 -mx-3 px-3 py-2 rounded">
+                      <span className="text-gray-900 font-semibold flex-1">{category.overallQuestion.question}</span>
+                      <span className="font-bold text-blue-600 ml-4">
+                        {categoryTotal} / {maxCategoryScore}
+                      </span>
+                    </div>
                   </div>
 
                   {/* Comments */}

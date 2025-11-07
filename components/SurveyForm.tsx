@@ -9,8 +9,6 @@ export default function SurveyForm() {
   const [companyName, setCompanyName] = useState('');
   const [respondentName, setRespondentName] = useState('');
   const [respondentEmail, setRespondentEmail] = useState('');
-  const [quarter, setQuarter] = useState('');
-  const [policyYear, setPolicyYear] = useState('');
 
   // Store scores as: category_id -> question_id -> rating
   const [scores, setScores] = useState<Record<string, Record<string, number>>>({});
@@ -45,10 +43,9 @@ export default function SurveyForm() {
 
     SURVEY_CATEGORIES.forEach((category) => {
       const categoryScores = scores[category.id] || {};
-      category.questions.forEach((question) => {
-        total += categoryScores[question.id] || 0;
-        maxPossible += question.maxScore;
-      });
+      // Use the overall satisfaction score for each category
+      total += categoryScores[category.overallQuestion.id] || 0;
+      maxPossible += category.overallQuestion.maxScore;
     });
 
     return { total, maxPossible, percentage: (total / maxPossible) * 100 };
@@ -57,14 +54,6 @@ export default function SurveyForm() {
   const validateForm = () => {
     if (!companyName.trim()) {
       setErrorMessage('Please enter company name');
-      return false;
-    }
-    if (!respondentName.trim()) {
-      setErrorMessage('Please enter your name');
-      return false;
-    }
-    if (!respondentEmail.trim() || !respondentEmail.includes('@')) {
-      setErrorMessage('Please enter a valid email address');
       return false;
     }
 
@@ -101,8 +90,6 @@ export default function SurveyForm() {
         companyName,
         respondentName,
         respondentEmail,
-        quarter: quarter || undefined,
-        policyYear: policyYear || undefined,
         scores,
         comments,
         totalScore: total,
@@ -115,8 +102,6 @@ export default function SurveyForm() {
           company_name: response.companyName,
           respondent_name: response.respondentName,
           respondent_email: response.respondentEmail,
-          quarter: response.quarter,
-          policy_year: response.policyYear,
           scores: response.scores,
           comments: response.comments,
           total_score: response.totalScore,
@@ -134,8 +119,6 @@ export default function SurveyForm() {
         setCompanyName('');
         setRespondentName('');
         setRespondentEmail('');
-        setQuarter('');
-        setPolicyYear('');
         setScores({});
         setComments({});
         setSubmitStatus('idle');
@@ -186,7 +169,7 @@ export default function SurveyForm() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Your Name *
+              Your Name (Optional)
             </label>
             <input
               type="text"
@@ -194,13 +177,12 @@ export default function SurveyForm() {
               onChange={(e) => setRespondentName(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Enter your name"
-              required
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Email Address *
+              Email Address (Optional)
             </label>
             <input
               type="email"
@@ -208,37 +190,6 @@ export default function SurveyForm() {
               onChange={(e) => setRespondentEmail(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="your.email@company.com"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Quarter (Optional)
-            </label>
-            <select
-              value={quarter}
-              onChange={(e) => setQuarter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="">Select quarter</option>
-              <option value="Q1">Q1</option>
-              <option value="Q2">Q2</option>
-              <option value="Q3">Q3</option>
-              <option value="Q4">Q4</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Policy Year (Optional)
-            </label>
-            <input
-              type="text"
-              value={policyYear}
-              onChange={(e) => setPolicyYear(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="e.g., 2024-2025"
             />
           </div>
         </div>

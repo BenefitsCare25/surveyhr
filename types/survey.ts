@@ -9,8 +9,8 @@ export interface Category {
   id: string;
   name: string;
   weight: number; // Percentage weight in total score
-  questions: CategoryQuestion[];
-  hasOverallSatisfaction: boolean;
+  questions: CategoryQuestion[]; // Input questions only
+  overallQuestion: CategoryQuestion; // Calculated overall satisfaction
 }
 
 export interface SurveyResponse {
@@ -18,8 +18,6 @@ export interface SurveyResponse {
   companyName: string;
   respondentName: string;
   respondentEmail: string;
-  quarter?: string;
-  policyYear?: string;
   submittedAt: Date;
 
   // Scores: category_id -> question_id -> rating (1-5)
@@ -44,9 +42,8 @@ export const SURVEY_CATEGORIES: Category[] = [
       { id: 'policy_docs', question: 'Issuance of Policy Documents / Billing', maxScore: 5 },
       { id: 'accuracy', question: 'Accuracy of Policy Document / Billing', maxScore: 5 },
       { id: 'premium_followup', question: 'Promptness in the follow-up on premium payment', maxScore: 5 },
-      { id: 'overall', question: 'Overall Satisfaction of Service Administration', maxScore: 15 },
     ],
-    hasOverallSatisfaction: true,
+    overallQuestion: { id: 'overall', question: 'Overall Satisfaction of Service Administration', maxScore: 15 },
   },
   {
     id: 'claims_admin',
@@ -56,9 +53,8 @@ export const SURVEY_CATEGORIES: Category[] = [
       { id: 'speediness', question: 'Speediness of settlement of reimbursement of claims', maxScore: 5 },
       { id: 'accuracy', question: 'Accuracy of claims assessment', maxScore: 5 },
       { id: 'followup', question: 'Follow-up with employees with missing claim documents', maxScore: 5 },
-      { id: 'overall', question: 'Overall satisfaction of Claim Administration', maxScore: 15 },
     ],
-    hasOverallSatisfaction: true,
+    overallQuestion: { id: 'overall', question: 'Overall satisfaction of Claim Administration', maxScore: 15 },
   },
   {
     id: 'customer_service',
@@ -69,9 +65,8 @@ export const SURVEY_CATEGORIES: Category[] = [
       { id: 'knowledge', question: 'Products and claims knowledge of our customer service personnel', maxScore: 5 },
       { id: 'response', question: 'Response to queries', maxScore: 5 },
       { id: 'facilitation', question: 'Facilitation support with third party medical provider', maxScore: 5 },
-      { id: 'overall', question: 'Overall satisfaction', maxScore: 20 },
     ],
-    hasOverallSatisfaction: true,
+    overallQuestion: { id: 'overall', question: 'Overall satisfaction', maxScore: 20 },
   },
   {
     id: 'presentation',
@@ -80,9 +75,8 @@ export const SURVEY_CATEGORIES: Category[] = [
     questions: [
       { id: 'monthly_reports', question: 'Monthly reports (By 3rd week of the following month)', maxScore: 5 },
       { id: 'quarterly_reports', question: 'Quarterly reports (By 4th week of the following month)', maxScore: 5 },
-      { id: 'overall', question: 'Overall satisfaction of Staff Presentation', maxScore: 10 },
     ],
-    hasOverallSatisfaction: true,
+    overallQuestion: { id: 'overall', question: 'Overall satisfaction of Staff Presentation', maxScore: 10 },
   },
   {
     id: 'staff_handbook',
@@ -91,9 +85,8 @@ export const SURVEY_CATEGORIES: Category[] = [
     questions: [
       { id: 'comprehensiveness', question: 'Comprehensiveness of the Handbook', maxScore: 5 },
       { id: 'clarity', question: 'Clarity of the Staff Handbook', maxScore: 5 },
-      { id: 'overall', question: 'Overall satisfaction of Staff Communication Handbook', maxScore: 10 },
     ],
-    hasOverallSatisfaction: true,
+    overallQuestion: { id: 'overall', question: 'Overall satisfaction of Staff Communication Handbook', maxScore: 10 },
   },
   {
     id: 'renewal_review',
@@ -110,8 +103,7 @@ export const SURVEY_CATEGORIES: Category[] = [
         question: 'Remarketing Exercise (September to October): Obtain quotes from other insurers to benchmark against renewal terms, Present and recommend renewal proposal',
         maxScore: 30,
       },
-      { id: 'overall', question: 'Overall satisfaction of Renewal Review', maxScore: 30 },
     ],
-    hasOverallSatisfaction: true,
+    overallQuestion: { id: 'overall', question: 'Overall satisfaction of Renewal Review', maxScore: 60 },
   },
 ];
