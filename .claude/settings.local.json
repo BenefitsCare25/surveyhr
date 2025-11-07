@@ -16,7 +16,9 @@
       "Bash(xargs cat:*)",
       "Bash(cat:*)",
       "Bash(npm run dev:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(dir:*)",
+      "Bash(if exist \"app\\api\\instances\\[id]\"\" rmdir /s /q \"appapiinstances[id] \")"
     ],
     "deny": [],
     "ask": []

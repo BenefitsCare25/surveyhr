@@ -138,13 +138,8 @@ export default function SurveyInstanceCreator() {
     try {
       setLoading(true);
 
-      // Delete existing visibility for this instance
-      await fetch(`/api/instances/${editingInstance.id}/visibility`, {
-        method: 'DELETE',
-      });
-
-      // Insert new visibility settings
-      const res = await fetch(`/api/instances/${editingInstance.id}/visibility`, {
+      // Update visibility settings
+      const res = await fetch(`/api/instances/visibility?id=${editingInstance.id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ visibility: editVisibility }),

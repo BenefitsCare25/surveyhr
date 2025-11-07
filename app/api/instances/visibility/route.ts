@@ -2,13 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { QuestionVisibility } from '@/types/survey';
 
-// POST /api/instances/[id]/visibility - Update visibility settings for an instance
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+// POST /api/instances/visibility?id=xxx - Update visibility settings for an instance
+export async function POST(request: NextRequest) {
   try {
-    const { id } = await params;
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json(
+        { error: 'Instance ID is required' },
+        { status: 400 }
+      );
+    }
+
     const body = await request.json();
     const { visibility } = body;
 
@@ -18,6 +24,13 @@ export async function POST(
         { status: 400 }
       );
     }
+
+    // Delete existing visibility records for this instance
+    await supabase
+      .from('survey_question_visibility')
+      .delete()
+      .eq('config_id', id)
+      .eq('config_type', 'instance');
 
     // Prepare visibility records for insertion
     const visibilityRecords = visibility.map((v: QuestionVisibility) => ({
@@ -45,13 +58,18 @@ export async function POST(
   }
 }
 
-// DELETE /api/instances/[id]/visibility - Delete all visibility settings for an instance
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+// DELETE /api/instances/visibility?id=xxx - Delete all visibility settings for an instance
+export async function DELETE(request: NextRequest) {
   try {
-    const { id } = await params;
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json(
+        { error: 'Instance ID is required' },
+        { status: 400 }
+      );
+    }
 
     const { error } = await supabase
       .from('survey_question_visibility')
