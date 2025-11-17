@@ -47,7 +47,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { template_id, company_id, name, expires_at } = body;
+    const { template_id, company_name, name, expires_at } = body;
 
     if (!template_id) {
       return NextResponse.json(
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
       .from('survey_instances')
       .insert([{
         template_id,
-        company_id: company_id || null,
+        company_name: company_name || null,
         url_slug,
         name,
         is_active: true,

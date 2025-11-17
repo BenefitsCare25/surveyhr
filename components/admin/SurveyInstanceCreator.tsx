@@ -17,13 +17,11 @@ export default function SurveyInstanceCreator() {
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     template_id: '',
-    company_id: '',
+    company_name: '',
     name: '',
   });
   const [loading, setLoading] = useState(false);
   const [generatedUrl, setGeneratedUrl] = useState<string | null>(null);
-  const [showCompanyForm, setShowCompanyForm] = useState(false);
-  const [newCompanyName, setNewCompanyName] = useState('');
   const [editingInstance, setEditingInstance] = useState<InstanceWithRelations | null>(null);
   const [editVisibility, setEditVisibility] = useState<QuestionVisibility[]>([]);
 
@@ -70,7 +68,7 @@ export default function SurveyInstanceCreator() {
       const data = await res.json();
       setGeneratedUrl(data.survey_url);
       await fetchData();
-      setFormData({ template_id: '', company_id: '', name: '' });
+      setFormData({ template_id: '', company_name: '', name: '' });
     } catch (error) {
       console.error('Error creating instance:', error);
       alert('Failed to create survey instance');
@@ -79,27 +77,6 @@ export default function SurveyInstanceCreator() {
     }
   };
 
-  const handleCreateCompany = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const res = await fetch('/api/companies', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: newCompanyName }),
-      });
-
-      if (!res.ok) throw new Error('Failed to create company');
-
-      const data = await res.json();
-      setCompanies([...companies, data.company]);
-      setFormData({ ...formData, company_id: data.company.id });
-      setNewCompanyName('');
-      setShowCompanyForm(false);
-    } catch (error) {
-      console.error('Error creating company:', error);
-      alert('Failed to create company');
-    }
-  };
 
   const toggleInstanceActive = async (id: string, currentStatus: boolean) => {
     try {
@@ -208,54 +185,13 @@ export default function SurveyInstanceCreator() {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Company (Optional)
             </label>
-            {!showCompanyForm ? (
-              <div className="flex gap-2">
-                <select
-                  value={formData.company_id}
-                  onChange={(e) => setFormData({ ...formData, company_id: e.target.value })}
-                  className="flex-1 border border-gray-300 rounded-lg p-2 text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="">No company (generic link)</option>
-                  {companies.map((company) => (
-                    <option key={company.id} value={company.id}>
-                      {company.name}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  type="button"
-                  onClick={() => setShowCompanyForm(true)}
-                  className="border px-3 py-2 rounded-lg hover:bg-gray-50 transition text-sm"
-                >
-                  + New
-                </button>
-              </div>
-            ) : (
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={newCompanyName}
-                  onChange={(e) => setNewCompanyName(e.target.value)}
-                  placeholder="Company name"
-                  className="flex-1 border border-gray-300 rounded-lg p-2 text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={handleCreateCompany}
-                  className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition text-sm"
-                >
-                  Add
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowCompanyForm(false)}
-                  className="border px-3 py-2 rounded-lg hover:bg-gray-50 transition text-sm"
-                >
-                  Cancel
-                </button>
-              </div>
-            )}
+            <input
+              type="text"
+              value={formData.company_name}
+              onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
+              placeholder="No company (generic link)"
+              className="w-full border border-gray-300 rounded-lg p-2 text-gray-900 bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
           </div>
 
           <div>
@@ -377,9 +313,9 @@ export default function SurveyInstanceCreator() {
                       {instance.is_active ? 'Active' : 'Inactive'}
                     </span>
                   </div>
-                  {instance.companies && (
+                  {instance.company_name && (
                     <p className="text-sm text-gray-600 mt-1">
-                      Company: {instance.companies.name}
+                      Company: {instance.company_name}
                     </p>
                   )}
                   {instance.survey_templates && (

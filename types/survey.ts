@@ -54,6 +54,7 @@ export interface SurveyInstance {
   id: string;
   template_id?: string;
   company_id?: string;
+  company_name?: string;
   url_slug: string;
   name: string;
   is_active: boolean;
