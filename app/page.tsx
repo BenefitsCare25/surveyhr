@@ -54,17 +54,32 @@ export default function DashboardPage() {
   const fetchResponses = async () => {
     try {
       setLoading(true);
+      console.log('[Dashboard] Fetching survey responses...');
+
       const { data, error } = await supabase
         .from('survey_responses')
         .select('*')
         .order('submitted_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('[Dashboard] Supabase error:', {
+          message: error.message,
+          code: error.code,
+          details: error.details,
+          hint: error.hint,
+        });
+        throw error;
+      }
 
+      console.log('[Dashboard] Fetch successful, rows:', data?.length || 0);
       setResponses(data || []);
-    } catch (err) {
-      console.error('Error fetching responses:', err);
-      setError('Failed to load survey responses');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      console.error('[Dashboard] Error fetching responses:', {
+        error: err,
+        message: errorMessage,
+      });
+      setError(`Failed to load survey responses: ${errorMessage}`);
     } finally {
       setLoading(false);
     }
