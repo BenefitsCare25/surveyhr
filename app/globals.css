@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Enable dark mode via data-theme selector */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 /* Light mode variables */
 [data-theme='light'] {
   --background: #ffffff;

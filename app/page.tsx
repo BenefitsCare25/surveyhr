@@ -193,7 +193,7 @@ export default function DashboardPage() {
 
   const SortIcon = ({ field }: { field: SortField }) => {
     if (sortField !== field) {
-      return <span className="text-gray-400 ml-1">⇅</span>;
+      return <span className="text-gray-400 dark:text-gray-500 ml-1">⇅</span>;
     }
     return <span className="text-blue-600 ml-1">{sortDirection === 'asc' ? '↑' : '↓'}</span>;
   };
@@ -201,10 +201,10 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <PasswordGate>
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading dashboard...</p>
+            <p className="text-gray-600 dark:text-gray-300">Loading dashboard...</p>
           </div>
         </div>
       </PasswordGate>
@@ -214,9 +214,9 @@ export default function DashboardPage() {
   if (error) {
     return (
       <PasswordGate>
-        <div className="min-h-screen bg-gray-50 py-12 px-4">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4">
           <div className="max-w-7xl mx-auto">
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+            <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded-md">
               {error}
             </div>
           </div>
@@ -227,14 +227,14 @@ export default function DashboardPage() {
 
   return (
     <PasswordGate>
-      <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
             <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-                <p className="text-gray-600 mt-1">
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Admin Dashboard</h1>
+                <p className="text-gray-600 dark:text-gray-300 mt-1">
                   Manage surveys, responses, and configurations
                 </p>
               </div>
@@ -255,18 +255,18 @@ export default function DashboardPage() {
             </div>
 
             {/* Tabs */}
-            <div className="border-b border-gray-200 mt-6">
+            <div className="border-b border-gray-200 dark:border-gray-700 mt-6">
               <nav className="flex gap-8">
                 <button
                   onClick={() => setActiveTab('responses')}
                   className={`pb-4 px-1 border-b-2 font-medium transition ${
                     activeTab === 'responses'
                       ? 'border-blue-600 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
                   }`}
                 >
                   Responses
-                  <span className="ml-2 bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">
+                  <span className="ml-2 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded text-xs">
                     {stats.total}
                   </span>
                 </button>
@@ -275,7 +275,7 @@ export default function DashboardPage() {
                   className={`pb-4 px-1 border-b-2 font-medium transition ${
                     activeTab === 'configuration'
                       ? 'border-blue-600 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
                   }`}
                 >
                   Configuration
@@ -289,16 +289,16 @@ export default function DashboardPage() {
             <>
               {/* Statistics */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div className="bg-white shadow-md rounded-lg p-4">
-              <p className="text-sm text-gray-600 mb-1">Average Score</p>
+            <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Average Score</p>
               <p className="text-3xl font-bold text-blue-600">{stats.avgScore}%</p>
             </div>
-            <div className="bg-white shadow-md rounded-lg p-4">
-              <p className="text-sm text-gray-600 mb-1">Companies</p>
+            <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Companies</p>
               <p className="text-3xl font-bold text-green-600">{stats.companies}</p>
             </div>
-            <div className="bg-white shadow-md rounded-lg p-4">
-              <p className="text-sm text-gray-600 mb-1">This Month</p>
+            <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">This Month</p>
               <p className="text-3xl font-bold text-purple-600">{stats.thisMonth}</p>
             </div>
           </div>
@@ -318,74 +318,76 @@ export default function DashboardPage() {
           />
 
           {/* Responses Table */}
-          <div className="bg-white shadow-md rounded-lg overflow-hidden">
+          <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
                     <th
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
                       onClick={() => handleSort('company_name')}
                     >
                       Company <SortIcon field="company_name" />
                     </th>
                     <th
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
                       onClick={() => handleSort('respondent_name')}
                     >
                       Respondent <SortIcon field="respondent_name" />
                     </th>
                     <th
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
                       onClick={() => handleSort('percentage_score')}
                     >
                       Score <SortIcon field="percentage_score" />
                     </th>
                     <th
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
                       onClick={() => handleSort('submitted_at')}
                     >
                       Submitted <SortIcon field="submitted_at" />
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                   {paginatedResponses.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                      <td colSpan={5} className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
                         {filteredAndSortedResponses.length === 0 && responses.length > 0
                           ? 'No responses match your filters'
                           : 'No responses found'}
                       </td>
                     </tr>
                   ) : (
-                    paginatedResponses.map((response) => (
+                    paginatedResponses.map((response, index) => (
                       <tr
                         key={response.id}
-                        className="hover:bg-gray-50 cursor-pointer"
+                        className={`hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer ${
+                          index % 2 === 1 ? 'bg-gray-50 dark:bg-gray-900/50' : ''
+                        }`}
                         onClick={() => setSelectedResponse(response)}
                       >
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900">
+                          <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
                             {response.company_name}
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <div className="text-sm text-gray-900">{response.respondent_name}</div>
-                          <div className="text-sm text-gray-500">{response.respondent_email}</div>
+                          <div className="text-sm text-gray-900 dark:text-gray-100">{response.respondent_name}</div>
+                          <div className="text-sm text-gray-500 dark:text-gray-400">{response.respondent_email}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-semibold text-gray-900">
+                          <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                             {response.percentage_score.toFixed(1)}%
                           </div>
-                          <div className="text-xs text-gray-500">
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
                             {response.total_score}/{response.max_possible_score}
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                           {new Date(response.submitted_at).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm">
@@ -394,7 +396,7 @@ export default function DashboardPage() {
                               e.stopPropagation();
                               setSelectedResponse(response);
                             }}
-                            className="text-blue-600 hover:text-blue-900 font-medium"
+                            className="text-blue-600 hover:text-blue-900 dark:hover:text-blue-400 font-medium"
                           >
                             View Details
                           </button>
@@ -408,22 +410,22 @@ export default function DashboardPage() {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="bg-gray-50 px-6 py-4 flex items-center justify-between border-t border-gray-200">
-                <div className="text-sm text-gray-700">
+              <div className="bg-gray-50 dark:bg-gray-700 px-6 py-4 flex items-center justify-between border-t border-gray-200 dark:border-gray-600">
+                <div className="text-sm text-gray-700 dark:text-gray-300">
                   Page {currentPage} of {totalPages}
                 </div>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
-                    className="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Previous
                   </button>
                   <button
                     onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                     disabled={currentPage === totalPages}
-                    className="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Next
                   </button>
