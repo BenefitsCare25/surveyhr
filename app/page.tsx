@@ -7,6 +7,7 @@ import FilterPanel from '@/components/FilterPanel';
 import ExportButton from '@/components/ExportButton';
 import ResponseDetailsModal from '@/components/ResponseDetailsModal';
 import ConfigurationTab from '@/components/admin/ConfigurationTab';
+import ThemeToggle from '@/components/ThemeToggle';
 
 interface SurveyResponse {
   id: string;
@@ -238,6 +239,7 @@ export default function DashboardPage() {
                 </p>
               </div>
               <div className="flex gap-2">
+                <ThemeToggle />
                 {activeTab === 'responses' && (
                   <>
                     <ExportButton responses={filteredAndSortedResponses} />
