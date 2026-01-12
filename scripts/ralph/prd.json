@@ -1,0 +1,166 @@
+{
+    "project": "SurveyHR Dark Mode",
+    "branchName": "ralph/add-dark-mode",
+    "description": "Add a manual dark mode toggle that allows users to switch between light, dark, and system themes with persistent preference storage",
+    "userStories": [
+        {
+            "id": "US-001",
+            "title": "Create ThemeContext and provider",
+            "description": "As a developer, I want a React context for theme management so that theme state can be shared across the app",
+            "acceptanceCriteria": [
+                "Create lib/theme-context.tsx with ThemeProvider and useTheme hook",
+                "ThemeProvider accepts children and manages theme state (light, dark, system)",
+                "useTheme hook returns current theme and setTheme function",
+                "Theme defaults to 'system' on initial load",
+                "npm run lint passes",
+                "npm run build passes"
+            ],
+            "priority": 1,
+            "passes": true,
+            "notes": "Completed on iteration 1. Also added eslint.config.mjs and fixed lint script."
+        },
+        {
+            "id": "US-002",
+            "title": "Add localStorage persistence for theme",
+            "description": "As a user, I want my theme preference to persist across sessions so that I don't have to re-select it each visit",
+            "acceptanceCriteria": [
+                "Theme preference is saved to localStorage under key 'theme'",
+                "On mount, ThemeProvider reads from localStorage and applies saved theme",
+                "If no saved preference exists, default to 'system'",
+                "localStorage is only accessed on client side (no SSR errors)",
+                "npm run lint passes",
+                "npm run build passes"
+            ],
+            "priority": 2,
+            "passes": true,
+            "notes": "Completed on iteration 2. Added getStoredTheme and storeTheme helper functions with SSR-safe checks."
+        },
+        {
+            "id": "US-003",
+            "title": "Update globals.css with dark mode CSS variables",
+            "description": "As a user, I want consistent dark mode colors so that the app looks good in dark mode",
+            "acceptanceCriteria": [
+                "Define CSS variables for dark mode in globals.css using [data-theme='dark'] selector",
+                "Add variables for: --background, --foreground, --card-bg, --card-border, --text-primary, --text-secondary, --accent",
+                "Light mode variables defined under [data-theme='light']",
+                "System preference uses @media (prefers-color-scheme: dark) when data-theme='system'",
+                "npm run lint passes",
+                "npm run build passes"
+            ],
+            "priority": 3,
+            "passes": true,
+            "notes": "Completed on iteration 3. Added all required CSS variables for light, dark, and system modes with proper selectors."
+        },
+        {
+            "id": "US-004",
+            "title": "Apply data-theme attribute to HTML element",
+            "description": "As a developer, I want the theme to be applied to the HTML element so that CSS selectors work correctly",
+            "acceptanceCriteria": [
+                "ThemeProvider sets data-theme attribute on document.documentElement",
+                "data-theme is set to 'light', 'dark', or 'system' based on current theme",
+                "Attribute updates immediately when theme changes",
+                "No flash of wrong theme on page load (use script in head or suppressHydrationWarning)",
+                "npm run lint passes",
+                "npm run build passes"
+            ],
+            "priority": 4,
+            "passes": true,
+            "notes": "Completed on iteration 4. Added useEffect to set data-theme attribute on documentElement. Added inline script in layout.tsx to prevent FOUC. Added suppressHydrationWarning to html element."
+        },
+        {
+            "id": "US-005",
+            "title": "Create ThemeToggle component",
+            "description": "As a user, I want a button to toggle between themes so that I can choose my preferred appearance",
+            "acceptanceCriteria": [
+                "Create components/ThemeToggle.tsx component",
+                "Component displays current theme with an icon (sun/moon/monitor)",
+                "Clicking cycles through: light -> dark -> system -> light",
+                "Component uses useTheme hook from ThemeContext",
+                "Component renders without errors",
+                "npm run lint passes",
+                "npm run build passes"
+            ],
+            "priority": 5,
+            "passes": true,
+            "notes": "Completed on iteration 5. Created ThemeToggle.tsx with sun/moon/monitor icons, cycles through light->dark->system->light."
+        },
+        {
+            "id": "US-006",
+            "title": "Integrate ThemeProvider into app layout",
+            "description": "As a developer, I want ThemeProvider wrapped around the app so that all components can access theme state",
+            "acceptanceCriteria": [
+                "Import and wrap children with ThemeProvider in app/layout.tsx",
+                "ThemeProvider is placed inside body element",
+                "suppressHydrationWarning added to html element to prevent hydration mismatch",
+                "App renders without hydration errors",
+                "npm run lint passes",
+                "npm run build passes"
+            ],
+            "priority": 6,
+            "passes": true,
+            "notes": "Completed on iteration 6. Imported ThemeProvider from lib/theme-context and wrapped children inside body element. suppressHydrationWarning was already present from US-004."
+        },
+        {
+            "id": "US-007",
+            "title": "Add ThemeToggle to dashboard header",
+            "description": "As a user, I want to see the theme toggle in the dashboard so that I can change themes while viewing the admin panel",
+            "acceptanceCriteria": [
+                "Import ThemeToggle component in app/page.tsx",
+                "Add ThemeToggle to the dashboard header next to existing buttons",
+                "Toggle is visible and clickable",
+                "Dashboard page renders without errors",
+                "npm run lint passes",
+                "npm run build passes"
+            ],
+            "priority": 7,
+            "passes": true,
+            "notes": "Completed on iteration 7. Imported ThemeToggle and added it to the dashboard header buttons flex container, visible on all tabs."
+        },
+        {
+            "id": "US-008",
+            "title": "Update dashboard page styles for dark mode",
+            "description": "As a user, I want the dashboard to look good in dark mode so that I can use it comfortably at night",
+            "acceptanceCriteria": [
+                "Replace hardcoded bg-gray-50, bg-white classes with dark mode variants (dark:bg-gray-900, dark:bg-gray-800)",
+                "Update text colors with dark variants (dark:text-gray-100, dark:text-gray-300)",
+                "Update border colors with dark variants (dark:border-gray-700)",
+                "Statistics cards have proper dark mode styling",
+                "Table has proper dark mode styling with alternating rows",
+                "npm run lint passes",
+                "npm run build passes"
+            ],
+            "priority": 8,
+            "passes": true,
+            "notes": "Completed on iteration 8. Added @custom-variant dark selector to globals.css for Tailwind v4. Updated all dashboard elements with dark: variants including loading state, error state, header, tabs, statistics cards, table (header, body, alternating rows), and pagination."
+        },
+        {
+            "id": "US-009",
+            "title": "Update Tailwind config for dark mode",
+            "description": "As a developer, I want Tailwind configured for dark mode so that dark: variants work correctly",
+            "acceptanceCriteria": [
+                "Add darkMode: 'selector' or darkMode: ['selector', '[data-theme=\"dark\"]'] to tailwind.config.ts",
+                "Verify dark: variants work in components",
+                "npm run lint passes",
+                "npm run build passes"
+            ],
+            "priority": 9,
+            "passes": true,
+            "notes": "Completed on iteration 9. Added darkMode: [\"selector\", \"[data-theme=\\\"dark\\\"]\"] to tailwind.config.ts. Dark mode was already working via CSS @custom-variant in globals.css for Tailwind v4, but this makes the config explicit and compatible with legacy tooling."
+        },
+        {
+            "id": "US-010",
+            "title": "Update survey page styles for dark mode",
+            "description": "As a user, I want the survey page to support dark mode so that respondents have a consistent experience",
+            "acceptanceCriteria": [
+                "Update app/survey/page.tsx with dark mode Tailwind classes",
+                "Update app/survey/[slug]/page.tsx with dark mode Tailwind classes",
+                "Form inputs, buttons, and cards have proper dark styling",
+                "npm run lint passes",
+                "npm run build passes"
+            ],
+            "priority": 10,
+            "passes": true,
+            "notes": "Completed on iteration 10. Updated app/survey/page.tsx and app/survey/[slug]/page.tsx with dark:bg-gray-900 background. Updated SurveyForm.tsx with dark mode for respondent info card, inputs, score summary, status messages, and submit button. Updated CategorySection.tsx with dark mode for card, borders, badges, overall satisfaction box, and textarea. Updated RatingInput.tsx with dark mode for labels, buttons, and hint text."
+        }
+    ]
+}

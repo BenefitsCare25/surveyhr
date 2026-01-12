@@ -1,0 +1,195 @@
+# Progress Log - Started 2026-01-12T18:16:03.079460
+
+## Codebase Patterns
+- Next.js 16.0.1 with React 19
+- Using Tailwind CSS v4
+- Project uses TypeScript
+- ESLint v9.x requires eslint.config.mjs (flat config format)
+- Next.js 16 does not expose the `lint` command in CLI - need to use eslint directly
+- Use 'use client' directive for client-side React hooks (useState, useContext, useEffect)
+
+## Iteration Notes
+
+### Iteration 1 - US-001: Create ThemeContext and provider
+**Status:** COMPLETED
+**Commit:** feat(ralph): US-001 - Create ThemeContext and provider
+
+**What was done:**
+- Created lib/theme-context.tsx with ThemeProvider component and useTheme hook
+- ThemeProvider manages theme state (light, dark, system) with 'system' as default
+- Added mounted state to handle SSR/hydration properly
+- Created eslint.config.mjs since ESLint v9 requires flat config
+- Updated package.json lint script to use eslint directly
+
+**Key learnings:**
+1. Next.js 16 removed `next lint` CLI command - use `eslint` directly
+2. ESLint 9.x requires flat config format (eslint.config.mjs)
+3. Need to add browser globals (alert, confirm, navigator, setTimeout, etc.) to eslint config
+4. React context needs 'use client' directive for Next.js App Router
+
+### Iteration 2 - US-002: Add localStorage persistence for theme
+**Status:** COMPLETED
+**Commit:** feat(ralph): US-002 - Add localStorage persistence for theme
+
+**What was done:**
+- Added getStoredTheme() helper to read from localStorage on mount
+- Added storeTheme() helper to save theme when setTheme is called
+- Wrapped state setter with useCallback for stable reference
+- Added typeof window checks for SSR safety
+- Added try/catch for localStorage access (handles private browsing, disabled storage)
+
+**Key learnings:**
+1. Always check `typeof window === 'undefined'` before accessing browser APIs like localStorage
+2. Wrap localStorage access in try/catch to handle cases where storage is unavailable
+3. Use useCallback for stable function references passed through context
+4. Read from localStorage inside useEffect (client-side only) rather than in initial state
+
+### Iteration 3 - US-003: Update globals.css with dark mode CSS variables
+**Status:** COMPLETED
+**Commit:** feat(ralph): US-003 - Update globals.css with dark mode CSS variables
+
+**What was done:**
+- Added CSS variables for light mode under [data-theme='light'] selector
+- Added CSS variables for dark mode under [data-theme='dark'] selector
+- Added CSS variables for system preference under [data-theme='system'] with @media (prefers-color-scheme: dark)
+- Variables defined: --background, --foreground, --card-bg, --card-border, --text-primary, --text-secondary, --accent
+- Added :root fallback for cases when no data-theme is set
+
+**Key learnings:**
+1. Use [data-theme='X'] attribute selectors for explicit theme control
+2. For system preference, define base (light) values in [data-theme='system'] and override in @media (prefers-color-scheme: dark)
+3. Include :root fallback with :not([data-theme]) for graceful degradation
+4. CSS variables are inherited, so defining on :root or html element makes them available everywhere
+
+### Iteration 4 - US-004: Apply data-theme attribute to HTML element
+**Status:** COMPLETED
+**Commit:** feat(ralph): US-004 - Apply data-theme attribute to HTML element
+
+**What was done:**
+- Added useEffect in ThemeProvider that sets data-theme attribute on document.documentElement
+- Added inline script in layout.tsx's <head> to set theme before React hydration (prevents FOUC)
+- Added suppressHydrationWarning to <html> element to prevent hydration mismatch warnings
+
+**Key learnings:**
+1. To prevent flash of unstyled content (FOUC), inject an inline script in <head> that runs before React
+2. The inline script reads localStorage and sets data-theme attribute synchronously before render
+3. Use suppressHydrationWarning on elements that may differ between server and client
+4. document.documentElement is the <html> element - use it to set theme attributes for CSS selectors
+5. dangerouslySetInnerHTML={{ __html: script }} is safe when script is a static string defined in code
+
+### Iteration 5 - US-005: Create ThemeToggle component
+**Status:** COMPLETED
+**Commit:** feat(ralph): US-005 - Create ThemeToggle component
+
+**What was done:**
+- Created components/ThemeToggle.tsx with three theme icons (sun/moon/monitor)
+- Component cycles through light -> dark -> system -> light on click
+- Uses useTheme hook from ThemeContext to get and set theme
+- Added accessible aria-label for screen readers
+- Styled with Tailwind including dark mode variants
+
+**Key learnings:**
+1. Use SVG icons for theme states: sun (light), moon (dark), monitor (system)
+2. Cycle function pattern: use switch statement for clear state transitions
+3. Follow existing component patterns in codebase (use 'use client', export default, etc.)
+4. Include aria-label for accessibility on interactive buttons
+5. Simple components can be self-contained with helper functions defined in the same file
+
+### Iteration 6 - US-006: Integrate ThemeProvider into app layout
+**Status:** COMPLETED
+**Commit:** feat(ralph): US-006 - Integrate ThemeProvider into app layout
+
+**What was done:**
+- Imported ThemeProvider from @/lib/theme-context in app/layout.tsx
+- Wrapped {children} with ThemeProvider inside the body element
+- suppressHydrationWarning was already in place on html element from US-004
+
+**Key learnings:**
+1. Client components (with 'use client') can be imported and used in Server Components in Next.js App Router
+2. ThemeProvider must be inside the body element, not wrapping html
+3. When a previous story already implements part of the acceptance criteria (like suppressHydrationWarning), just verify it's there
+4. Integration stories are often simple - the heavy lifting was done in earlier context/component creation stories
+
+### Iteration 7 - US-007: Add ThemeToggle to dashboard header
+**Status:** COMPLETED
+**Commit:** feat(ralph): US-007 - Add ThemeToggle to dashboard header
+
+**What was done:**
+- Imported ThemeToggle component from @/components/ThemeToggle in app/page.tsx
+- Added ThemeToggle to the dashboard header's button flex container
+- Positioned it before the conditional buttons so it's visible on all tabs
+
+**Key learnings:**
+1. When adding a component to a page, check if it should be visible conditionally or always
+2. ThemeToggle is placed outside the {activeTab === 'responses' && ...} block so it shows on all tabs
+3. Simple integration - just import and place in the appropriate location in the JSX
+4. The component already handles its own state via useTheme hook from context
+
+### Iteration 8 - US-008: Update dashboard page styles for dark mode
+**Status:** COMPLETED
+**Commit:** feat(ralph): US-008 - Update dashboard page styles for dark mode
+
+**What was done:**
+- Added @custom-variant dark selector to globals.css for Tailwind v4 dark mode support
+- Updated loading state with dark:bg-gray-900 and dark:text-gray-300
+- Updated error state with dark backgrounds and text colors
+- Updated header card with dark:bg-gray-800 and dark text colors
+- Updated tabs with dark mode border colors and inactive state text colors
+- Updated statistics cards with dark:bg-gray-800 backgrounds
+- Updated table header with dark:bg-gray-700 and dark text
+- Updated table body with dark:bg-gray-800 and alternating row colors (index % 2 === 1)
+- Updated pagination with dark backgrounds, borders, and text colors
+- Updated SortIcon component with dark mode styling
+
+**Key learnings:**
+1. Tailwind v4 uses CSS-based configuration - add `@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));` to globals.css
+2. For alternating row colors in tables, use index from .map() and apply conditional classes
+3. Remember to update all states: loading, error, and main content
+4. For hover states, add both light and dark hover variants: `hover:bg-gray-50 dark:hover:bg-gray-700`
+5. US-008 required the dark mode config (part of US-009) as a prerequisite - included it here since dark: variants don't work without it
+
+
+### Iteration 9 - US-009: Update Tailwind config for dark mode
+**Status:** COMPLETED
+**Commit:** feat(ralph): US-009 - Update Tailwind config for dark mode
+
+**What was done:**
+- Added darkMode: ['selector', '[data-theme="dark"]'] to tailwind.config.ts
+- Added comments explaining that dark mode is configured via CSS @custom-variant in globals.css for Tailwind v4
+- Verified dark: variants work in components (confirmed in app/page.tsx)
+
+**Key learnings:**
+1. Tailwind v4 handles dark mode via CSS @custom-variant directive, but the JS config option is still supported
+2. The config option darkMode: ['selector', '[data-theme="dark"]'] is the correct format for selector-based dark mode
+3. In Tailwind v4, both CSS-based and JS-based dark mode configs can coexist - the CSS @custom-variant takes precedence
+4. Adding the JS config is useful for documentation and compatibility with older tooling that reads tailwind.config.ts
+5. US-008 already implemented the required CSS-based dark mode config - this story formalizes it in the JS config as well
+
+### Iteration 10 - US-010: Update survey page styles for dark mode
+**Status:** COMPLETED
+**Commit:** feat(ralph): US-010 - Update survey page styles for dark mode
+
+**What was done:**
+- Updated app/survey/page.tsx with dark:bg-gray-900 background
+- Updated app/survey/[slug]/page.tsx with dark:bg-gray-900 background
+- Updated SurveyForm.tsx with comprehensive dark mode styling:
+  - Respondent info card (bg-white dark:bg-gray-800)
+  - All input fields (borders, backgrounds, text, placeholders)
+  - Score summary card (gradient backgrounds, text colors)
+  - Success/error status messages
+  - Submit button disabled state
+- Updated CategorySection.tsx with dark mode styling:
+  - Category cards and borders
+  - Weight badges (blue background)
+  - Overall satisfaction box
+  - Comments textarea
+- Updated RatingInput.tsx with dark mode styling:
+  - Labels, unselected buttons, hint text
+
+**Key learnings:**
+1. Using sed for bulk text replacements is effective when Edit tool has file cache issues
+2. Survey forms have many elements that need dark styling: inputs, cards, buttons, status messages
+3. For semi-transparent dark backgrounds, use Tailwind's opacity syntax (dark:bg-red-900/30)
+4. Rating buttons need both hover and selected states for dark mode
+5. All text needs dark variants: headings, labels, hints, helper text
+6. Borders are easy to miss - remember to update border-gray-300 to dark:border-gray-600
