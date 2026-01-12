@@ -35,17 +35,17 @@ export default function CategorySection({
   }, [calculatedOverallScore, category.overallQuestion.id, onScoreChange]);
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-6 mb-6">
-      <div className="border-b pb-3 mb-4">
+    <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+      <div className="border-b dark:border-gray-700 pb-3 mb-4">
         <div className="flex justify-between items-start">
-          <h2 className="text-xl font-bold text-gray-900">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
             {category.name}
           </h2>
-          <span className="text-sm font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded">
+          <span className="text-sm font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-3 py-1 rounded">
             {category.weight}% of Total Score
           </span>
         </div>
-        <div className="mt-2 text-sm text-gray-600">
+        <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
           Current Score: <span className="font-semibold">{calculatedOverallScore}</span> / {maxTotal}
         </div>
       </div>
@@ -62,32 +62,32 @@ export default function CategorySection({
       ))}
 
       {/* Overall Satisfaction - Calculated Display */}
-      <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+      <div className="mb-6 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
         <div className="flex justify-between items-center">
           <div>
-            <p className="font-medium text-gray-900">{category.overallQuestion.question}</p>
-            <p className="text-xs text-gray-600 mt-1">Automatically calculated from scores above</p>
+            <p className="font-medium text-gray-900 dark:text-gray-100">{category.overallQuestion.question}</p>
+            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Automatically calculated from scores above</p>
           </div>
           <div className="text-right">
-            <div className="text-2xl font-bold text-blue-600">
+            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
               {calculatedOverallScore}
             </div>
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-gray-600 dark:text-gray-400">
               Maximum Score: {maxTotal}
             </div>
           </div>
         </div>
       </div>
 
-      <div className="mt-4 pt-4 border-t">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+      <div className="mt-4 pt-4 border-t dark:border-gray-700">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           Comments
         </label>
         <textarea
           value={comment}
           onChange={(e) => onCommentChange(e.target.value)}
           rows={3}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-500"
           placeholder="Add any additional comments for this category..."
         />
       </div>

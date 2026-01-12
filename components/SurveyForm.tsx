@@ -194,48 +194,48 @@ export default function SurveyForm({ configuration }: SurveyFormProps) {
       </div>
 
       {/* Respondent Information */}
-      <div className="bg-white shadow-md rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">
+      <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
           Respondent Information
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Company Name *
             </label>
             <input
               type="text"
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-500"
               placeholder="Enter company name"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Your Name (Optional)
             </label>
             <input
               type="text"
               value={respondentName}
               onChange={(e) => setRespondentName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-500"
               placeholder="Enter your name"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Email Address (Optional)
             </label>
             <input
               type="email"
               value={respondentEmail}
               onChange={(e) => setRespondentEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-500"
               placeholder="your.email@company.com"
             />
           </div>
@@ -257,26 +257,26 @@ export default function SurveyForm({ configuration }: SurveyFormProps) {
       ))}
 
       {/* Score Summary */}
-      <div className="bg-gradient-to-r from-green-50 to-blue-50 border-2 border-blue-200 rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Score Summary</h2>
+      <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-gray-800 dark:to-gray-800 border-2 border-blue-200 dark:border-gray-600 rounded-lg p-6 mb-6">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Score Summary</h2>
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>
-            <p className="text-sm text-gray-600">Current Score</p>
-            <p className="text-3xl font-bold text-blue-600">{total}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Current Score</p>
+            <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">{total}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">Maximum Score</p>
-            <p className="text-3xl font-bold text-gray-700">{maxPossible}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Maximum Score</p>
+            <p className="text-3xl font-bold text-gray-700 dark:text-gray-300">{maxPossible}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">Percentage</p>
-            <p className="text-3xl font-bold text-green-600">
+            <p className="text-sm text-gray-600 dark:text-gray-400">Percentage</p>
+            <p className="text-3xl font-bold text-green-600 dark:text-green-400">
               {percentage.toFixed(1)}%
             </p>
           </div>
         </div>
         {percentage >= 80 && (
-          <p className="text-center mt-4 text-green-700 font-medium">
+          <p className="text-center mt-4 text-green-700 dark:text-green-400 font-medium">
             ✓ Overall satisfaction target (80%) achieved!
           </p>
         )}
@@ -284,14 +284,14 @@ export default function SurveyForm({ configuration }: SurveyFormProps) {
 
       {/* Status Messages */}
       {submitStatus === 'success' && (
-        <div className="bg-green-50 border-2 border-green-500 text-green-800 px-4 py-3 rounded-lg mb-4">
+        <div className="bg-green-50 dark:bg-green-900/30 border-2 border-green-500 dark:border-green-600 text-green-800 dark:text-green-300 px-4 py-3 rounded-lg mb-4">
           <p className="font-medium">✓ Survey submitted successfully!</p>
           <p className="text-sm">Thank you for your feedback.</p>
         </div>
       )}
 
       {submitStatus === 'error' && errorMessage && (
-        <div className="bg-red-50 border-2 border-red-500 text-red-800 px-4 py-3 rounded-lg mb-4">
+        <div className="bg-red-50 dark:bg-red-900/30 border-2 border-red-500 dark:border-red-600 text-red-800 dark:text-red-300 px-4 py-3 rounded-lg mb-4">
           <p className="font-medium">✗ {errorMessage}</p>
         </div>
       )}
@@ -306,7 +306,7 @@ export default function SurveyForm({ configuration }: SurveyFormProps) {
             transition-all transform hover:scale-105
             ${
               isSubmitting
-                ? 'bg-gray-400 cursor-not-allowed'
+                ? 'bg-gray-400 dark:bg-gray-600 cursor-not-allowed'
                 : 'bg-blue-600 hover:bg-blue-700 text-white'
             }
           `}
