@@ -6,6 +6,9 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  // Dark mode is configured via CSS @custom-variant in globals.css for Tailwind v4
+  // The selector [data-theme="dark"] is used to toggle dark mode
+  darkMode: ["selector", '[data-theme="dark"]'],
   theme: {
     extend: {
       colors: {
