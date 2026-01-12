@@ -59,6 +59,13 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     setMounted(true);
   }, []);
 
+  // Apply data-theme attribute to document.documentElement when theme changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+  }, [theme]);
+
   // Wrapper that saves to localStorage when theme changes
   const setTheme = useCallback((newTheme: Theme) => {
     setThemeState(newTheme);
